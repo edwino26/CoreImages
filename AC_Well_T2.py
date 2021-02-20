@@ -14,6 +14,7 @@ import matplotlib as mpl
 import matplotlib.gridspec as gridspec
 import matplotlib.colors as mcolors
 import glob
+import lasio
 
 
 
