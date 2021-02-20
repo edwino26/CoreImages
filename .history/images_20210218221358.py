@@ -157,4 +157,4 @@ p_50 = np.percentile(sub['DEPTH'], 50)
 plt.yticks([]); plt.xticks([])
 plt.subplots_adjust(wspace = 20, left = 0.1, right = 0.9, bottom = 0.1, top = 0.9)
 plt.show()
-
+# %%
