@@ -7,14 +7,11 @@ import numpy as np
 import pandas as pd
 import math
 import lasio
-import cv2
-import os.path
 import matplotlib.pyplot as plt  # GRAPHS
 import matplotlib as mpl
 import matplotlib.gridspec as gridspec
 import matplotlib.colors as mcolors
 import glob
-import lasio
 
 
 
