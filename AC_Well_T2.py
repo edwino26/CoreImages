@@ -92,7 +92,7 @@ plt.subplot(173)
 plt.plot(df_1.RHOZ,df_1.DEPTH,'red',lw=0.5)
 plt.axis([1.6, 2.65, dt,bt])
 plt.title('$RHOZ$')
-plt.xlabel('Standard \n Resolution \n Formation \n Density') #\n ( G/C3)'  DENTRO DEL PARENTESIS
+plt.xlabel('Standard \n Resolution \n Formation \n Density') 
 plt.gca().invert_yaxis()
 plt.gca().yaxis.set_visible(False)
 plt.grid(True)
@@ -291,13 +291,13 @@ print(Rsh)
 
 # %%
 ## TERM1= 1/RT - VSH/RSH
-df_1['term1']=(1/df_1.AT90)-(df_1.Vsh/Rsh)
+term1=(1/df_1.AT90)-(df_1.Vsh/Rsh)
 ## TERM2 = F*RW
 term2=(F*df_1.RW2)
 ## TERM3 = (1-vsh)
 term3=(1-df_1.Vsh)
 ## SW_POUPON = ((TERM1*TERM2)/TERM3))^(1/N)
-df_1['Sw_p']=((df_1.term1*term2)/term3)**(1/n)
+df_1['Sw_p']=((term1*term2)/term3)**(1/n)
 df_1['Sw_p1']= df_1['Sw_p'].apply(lambda x: 1 if x >1 else x)
 df_1['Sw_p1'] = df_1['Sw_p1'].replace(np.nan, 1)
 
@@ -591,6 +591,8 @@ plt.show()
 
 
 # %%
-
+with pd.ExcelWriter('T2.xlsx') as writer:  
+    df_1.to_excel(writer, sheet_name='T2_DF1')
+    df_2.to_excel(writer, sheet_name='T2_DF2')
 
 
