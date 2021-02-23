@@ -284,13 +284,13 @@ print(Rsh)
 
 # %%
 ## TERM1= 1/RT - VSH/RSH
-df_1['term1']=(1/df_1.AT90)-(df_1.Vsh/Rsh)
+term1=(1/df_1.AT90)-(df_1.Vsh/Rsh)
 ## TERM2 = F*RW
 term2=(F*df_1.RW2)
 ## TERM3 = (1-vsh)
 term3=(1-df_1.Vsh)
 ## SW_POUPON = ((TERM1*TERM2)/TERM3))^(1/N)
-df_1['Sw_p']=((df_1.term1*term2)/term3)**(1/n)
+df_1['Sw_p']=((term1*term2)/term3)**(1/n)
 df_1['Sw_p1']= df_1['Sw_p'].apply(lambda x: 1 if x >1 else x)
 df_1['Sw_p1'] = df_1['Sw_p1'].replace(np.nan, 1)
 
@@ -650,5 +650,7 @@ plt.xlabel('Core Porosity v/v')
 plt.grid(True)
 plt.show()
 # %%
+with pd.ExcelWriter('T6.xlsx') as writer:  
+    df_1.to_excel(writer, sheet_name='T6_DF1')
+    df_2.to_excel(writer, sheet_name='T6_DF2')
 
-# %%

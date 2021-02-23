@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import os
-os.system('clear')
+
 
 
 # %%
@@ -132,8 +132,8 @@ sub.to_excel("Processed_Images.xlsx",
               sheet_name=Well) 
  
 # %%
-dplot_o = 3700
-dplot_n = 3703
+dplot_o = 3675
+dplot_n = 3750
 shading = 'bone'
 
 istr = int(ImgStack.shape[0]*(dplot_o - doo)/(dnn-doo))
