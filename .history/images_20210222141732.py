@@ -132,22 +132,35 @@ sub.to_excel("Processed_Images.xlsx",
               sheet_name=Well) 
  
 # %%
-dplot_o = 3675
-dplot_n = 3750
+dplot_o = 3700
+dplot_n = 3703
 shading = 'bone'
 
 istr = int(ImgStack.shape[0]*(dplot_o - doo)/(dnn-doo))
 iend = int(ImgStack.shape[0]*(dplot_n - doo)/(dnn-doo))
 
 plt.figure()
-plt.subplot2grid((1, 10), (0, 0), colspan=3)
+plt.subplot2grid((1, 10), (0, 0), colspan=2)
+plt.plot(sub['GRAY'], sub['DEPTH'], 'mediumseagreen', linewidth=0.5);
+plt.axis([50, 250, dplot_o, dplot_n]);
+plt.gca().invert_yaxis();
+plt.fill_between(sub['GRAY'], 0, sub['DEPTH'], facecolor='green', alpha=0.5)
+plt.xlabel('Gray Scale RGB')
+plt.subplot2grid((1, 10), (0, 2), colspan=2)
 plt.plot(sub['GRAY'], sub['DEPTH'], 'mediumseagreen', linewidth=0.5);
 plt.axis([50, 250, dplot_o, dplot_n]);
 plt.gca().invert_yaxis();
 plt.fill_between(sub['GRAY'], 0, sub['DEPTH'], facecolor='green', alpha=0.5)
 plt.xlabel('Gray Scale RGB')
 
-plt.subplot2grid((1, 10), (0, 3), colspan=7)
+plt.subplot2grid((1, 10), (0, 4), colspan=3)
+plt.plot(sub['GRAY'], sub['DEPTH'], 'mediumseagreen', linewidth=0.5);
+plt.axis([50, 250, dplot_o, dplot_n]);
+plt.gca().invert_yaxis();
+plt.fill_between(sub['GRAY'], 0, sub['DEPTH'], facecolor='green', alpha=0.5)
+plt.xlabel('Gray Scale RGB')
+
+plt.subplot2grid((1, 10), (0, 7), colspan=3)
 plt.imshow(ImgStack[istr:iend,80:120], aspect='auto', origin='upper', extent=[0,1,dplot_n,dplot_o], cmap=shading);
 plt.axis([0, 1, dplot_o, dplot_n]);
 plt.gca().invert_yaxis()
@@ -158,5 +171,3 @@ plt.yticks([]); plt.xticks([])
 plt.subplots_adjust(wspace = 20, left = 0.1, right = 0.9, bottom = 0.1, top = 0.9)
 plt.show()
 
-
-# %%

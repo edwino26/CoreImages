@@ -132,8 +132,8 @@ sub.to_excel("Processed_Images.xlsx",
               sheet_name=Well) 
  
 # %%
-dplot_o = 3675
-dplot_n = 3750
+dplot_o = 3700
+dplot_n = 3703
 shading = 'bone'
 
 istr = int(ImgStack.shape[0]*(dplot_o - doo)/(dnn-doo))
@@ -158,5 +158,3 @@ plt.yticks([]); plt.xticks([])
 plt.subplots_adjust(wspace = 20, left = 0.1, right = 0.9, bottom = 0.1, top = 0.9)
 plt.show()
 
-
-# %%
