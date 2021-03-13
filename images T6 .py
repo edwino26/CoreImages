@@ -14,6 +14,7 @@ import os
 Well = 'T6'
 cores_per_image = 6
 uvFiles = glob.glob('./Photos/T6/*.jpg')
+print(uvFiles)
 filedos = []
 
 for l in range(len(uvFiles)):

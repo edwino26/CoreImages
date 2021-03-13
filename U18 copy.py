@@ -32,15 +32,24 @@ frames = [df1, df2, df3]
 result = pd.merge(df1,df2)
 df5=pd.merge(result,df3)
 
+
+
 # %%
 
 # EXCEL DE DATA U18.XLSX TIENE LOS DATOS TAL CUAL ENVIADOS POR VALENTINA SIN CAMBIOS 
 U18_xl =pd.read_excel('./data U18.xlsx',sheet_name = 'DATA')
 df4=U18_xl[['DEPTH','RHOZ']]
+df4.head(100)
 
+# %%
+df5.head(100)
+
+
+# %%
 # array con nueva tabla para TDEP (prof) con paso de 0.5
 dep= np.arange(200,1350,0.5)
 
+RHOZ_log =  df4.interpolate()
 
 
 ## interpolacion de valores del RHOZ
