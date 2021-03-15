@@ -188,7 +188,7 @@ cg1=T6_GR['GR_Scaled']
 # %%
 top= dplot_o 
 bottom= dplot_n 
-T6_x = pd.read_excel('./T6.xlsx',sheet_name='T6_DF1')
+T6_x = pd.read_excel('./T6.xlsx',sheet_name='T6_data')
 T6_x = T6_x[['DEPTH','GR_EDTC','RHOZ','AT90','NPHI','Vsh','Vclay','grain_density','porosity',
                    'RW2','Sw_a','Sw_a1','Sw_p','Sw_p1','SwWS','Swsim','Swsim1','PAY_archie',
                     'PAY_poupon','PAY_waxman','PAY_simandoux']]
