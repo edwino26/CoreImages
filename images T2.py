@@ -8,6 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import os
+from scipy import interpolate
 
 
 
@@ -128,7 +129,18 @@ d = {'DEPTH': DEPTH, 'GRAY': GRAY}
 sub = pd.DataFrame(np.array(DEPTH).T, columns = ['DEPTH'])
 sub['GRAY'] = np.array(GRAY).T
 sub['PHOTO'] = np.array(PHOTO).T
-sub.to_excel("Processed_Images_T2.xlsx",sheet_name=Well) 
+
+
+dep= np.arange(doo,dnn,0.25)
+sub_S = pd.DataFrame(dep.T, columns = ['DEPTH'])
+sub_S['DEPTH'] = dep
+f = interpolate.interp1d(sub['DEPTH'], sub['GRAY'])
+sub_S['GRAY'] = f(dep)
+p = interpolate.interp1d(sub['DEPTH'], sub['PHOTO'])
+sub_S['PHOTO'] = p(dep)
+
+sub_S.to_excel("./Excel_Files/Processed_Images_T2.xls",sheet_name=Well) 
+
  
 # %%
 dplot_o = 3671
