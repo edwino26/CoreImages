@@ -19,7 +19,7 @@ u18=pd.read_excel('./U18.xlsx',sheet_name='U18_data')
 df= pd.DataFrame()
 df = df.append((t2,t6,u18), ignore_index=False)
 df1 = Img_t2[['DEPTH', 'GRAY','PHOTO']]
-print(df1)
+
 # %%
 with pd.ExcelWriter('All_Wells.xlsx') as writer:  
-    df1.to_excel(writer, sheet_name='Wells_data')
+    df.to_excel(writer, sheet_name='Wells_data')

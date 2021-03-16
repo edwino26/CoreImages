@@ -562,8 +562,13 @@ plt.show()
 
 # %%
 df.insert(22, "WELL", 'T2')
-with pd.ExcelWriter('T2.xlsx') as writer:  
-    df.to_excel(writer, sheet_name='T2_data')
+Img_t2=pd.read_excel('./Processed_Images_T2.xlsx',sheet_name='T2')
+df1 = Img_t2[['DEPTH', 'GRAY','PHOTO']]
+df2 = df.append((df,df1), ignore_index=False)
+with pd.ExcelWriter('T2_ok.xlsx') as writer:  
+    df2.to_excel(writer, sheet_name='T2_data')
    
+print(df2)
 
 
+# %%
