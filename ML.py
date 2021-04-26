@@ -23,3 +23,7 @@ df1 = Img_t2[['DEPTH', 'GRAY','PHOTO']]
 # %%
 with pd.ExcelWriter('All_Wells.xlsx') as writer:  
     df.to_excel(writer, sheet_name='Wells_data')
+
+# %%  Create main ML dataframes
+
+

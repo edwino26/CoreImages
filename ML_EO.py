@@ -15,9 +15,22 @@ import missingno as msno
 
 #%%
 T2 = pd.read_excel('./Excel_Files/T2.xls',sheet_name='T2_data')
-Img_T2 = pd.read_excel('./Excel_Files/Processed_Images_T2.xls',sheet_name='T2')
 T6 = pd.read_excel('./Excel_Files/T6.xls',sheet_name='T6_data')
+U18 = pd.read_excel('./Excel_Files/U18.xls',sheet_name='U18_data')
+
+Img_T2 = pd.read_excel('./Excel_Files/Processed_Images_T2.xls',sheet_name='T2')
 Img_T6 = pd.read_excel('./Excel_Files/Processed_Images_T6.xls',sheet_name='T6')
+Img_U18 = pd.read_excel('./Excel_Files/Processed_Images_U18.xls',sheet_name='U18')
+
+
+#Get sub array in which PHOTO =1 to get rid of incorrect value ointerpolation between images
+Img_U18 = Img_U18[Img_U18['PHOTO'].apply(lambda x: 1 if x.is_integer())]
+
+
+dep= np.arange(200,1350,0.5)
+f = interpolate.interp1d(df4['DEPTH'], df4['RHOZ'])
+RHOZ_new = f(dep)
+
 
 # u18=pd.read_excel('./Excel_Files/U18.xls',sheet_name='U18_data')
 # df= pd.DataFrame()

@@ -121,6 +121,7 @@ for k in range(len(uvFiles)): #Loop through various files containing images
     depths = np.arange(do, dn, (dn - do) / len(img_log))
     photo_number = np.full_like(depths, 1)*(k+1)
 
+
     DEPTH.extend(depths.tolist())
     GRAY.extend(img_log.tolist())
     PHOTO.extend(photo_number.tolist())
