@@ -50,7 +50,7 @@ U18 = U18_img.merge(U18, on='DEPT', how='inner').dropna()
 logset = ['DEPT', 'GR_EDTC', 'RHOZ', 'AT90', 'DTCO', 'NPHI', 'WELL', 'GRAY']
 
 df = T2[logset].append(T6[logset]).append(U18[logset]).rename(columns={"GR_EDTC": "GR", "AT90": "RT", "RHOZ": "RHOB", "WELL": "Well"}).set_index('Well')
-df.reset_index(inplace=True)
+df.reset_index()
 
 
 # %%
@@ -92,10 +92,9 @@ plt.tight_layout()
 plt.show()
 
 #
-variables= ['GR', 'RHOB', 'RT', 'DTCO', 'NPHI', 'GRAY']
-fig, axes = scatterplotmatrix(df[df['Well']=='T2'].drop(['Well', 'DEPT'], axis=1).values, figsize=(10, 8), alpha=0.5)
-fig, axes = scatterplotmatrix(df[df['Well']=='T6'].drop(['Well', 'DEPT'], axis=1).values, fig_axes=(fig, axes), alpha=0.5)
-fig, axes = scatterplotmatrix(df[df['Well']=='U18'].drop(['Well', 'DEPT'], axis=1).values, fig_axes=(fig, axes), alpha=0.5, names=variables)
+fig, axes = scatterplotmatrix(df[df['Well']=='T2'], figsize=(10, 8), alpha=0.5)
+fig, axes = scatterplotmatrix(df[df['Well']=='T6'], fig_axes=(fig, axes), alpha=0.5)
+fig, axes = scatterplotmatrix(df[df['Well']=='U18'], fig_axes=(fig, axes), alpha=0.5, names=names)
 plt.tight_layout()
 plt.show()
 

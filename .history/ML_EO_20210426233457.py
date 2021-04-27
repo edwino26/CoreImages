@@ -6,7 +6,6 @@ import pandas as pd
 import os
 import os.path
 import matplotlib.pyplot as plt  # GRAPHS
-from mlxtend.plotting import scatterplotmatrix
 import glob
 import seaborn as sns
 import missingno as msno
@@ -50,7 +49,7 @@ U18 = U18_img.merge(U18, on='DEPT', how='inner').dropna()
 logset = ['DEPT', 'GR_EDTC', 'RHOZ', 'AT90', 'DTCO', 'NPHI', 'WELL', 'GRAY']
 
 df = T2[logset].append(T6[logset]).append(U18[logset]).rename(columns={"GR_EDTC": "GR", "AT90": "RT", "RHOZ": "RHOB", "WELL": "Well"}).set_index('Well')
-df.reset_index(inplace=True)
+df.reset_index()
 
 
 # %%
@@ -79,25 +78,7 @@ for (i, d),hatch in zip(df.groupby('Well'), hatches):
 ax.legend()
 
 # Expected correlations between variables
-fig, axs = plt.subplots(2, 2, figsize=(5, 5))
-axs[0, 0].hist(df['GRAY'])
-axs[1, 0].plot(df['GR'], df['GRAY'], linestyle='None', markersize=4, marker='o')
-axs[0, 1].plot(df['RHOB'], df['GRAY'], linestyle='None', markersize=4, marker='o')
-axs[1, 1].hist2d(df['RT'], df['GRAY'])
-plt.show()
 
-# Matrix Plot
-scatterplotmatrix(df, figsize=(10, 8))
-plt.tight_layout()
-plt.show()
-
-#
-variables= ['GR', 'RHOB', 'RT', 'DTCO', 'NPHI', 'GRAY']
-fig, axes = scatterplotmatrix(df[df['Well']=='T2'].drop(['Well', 'DEPT'], axis=1).values, figsize=(10, 8), alpha=0.5)
-fig, axes = scatterplotmatrix(df[df['Well']=='T6'].drop(['Well', 'DEPT'], axis=1).values, fig_axes=(fig, axes), alpha=0.5)
-fig, axes = scatterplotmatrix(df[df['Well']=='U18'].drop(['Well', 'DEPT'], axis=1).values, fig_axes=(fig, axes), alpha=0.5, names=variables)
-plt.tight_layout()
-plt.show()
 
 
 # %%
