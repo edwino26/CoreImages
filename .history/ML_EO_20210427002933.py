@@ -96,13 +96,6 @@ fig, axes = scatterplotmatrix(df[df['Well']=='T6'].drop(['Well', 'DEPT'], axis=1
 plt.tight_layout()
 plt.show()
 
-#With SB
-
-sns.set_theme(style="ticks")
-sns.pairplot(df, kind="kde")
-
-
-
 
 # %%
 #sns.heatmap(df.drop(['DEPT'], axis=1).isnull())

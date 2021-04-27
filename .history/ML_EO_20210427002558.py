@@ -91,17 +91,10 @@ plt.show()
 # Matrix Plot
 variables= ['GR', 'RHOB', 'RT', 'DTCO', 'NPHI', 'GRAY']
 fig, axes = scatterplotmatrix(df[df['Well']=='T2'].drop(['Well', 'DEPT'], axis=1).values, figsize=(10, 8), alpha=0.5)
-fig, axes = scatterplotmatrix(df[df['Well']=='T6'].drop(['Well', 'DEPT'], axis=1).values, fig_axes=(fig, axes), alpha=0.5, names=variables, labels=['T2', 'T6']) 
+fig, axes = scatterplotmatrix(df[df['Well']=='T6'].drop(['Well', 'DEPT'], axis=1).values, fig_axes=(fig, axes), alpha=0.5, names=variables)
 #fig, axes = scatterplotmatrix(df[df['Well']=='U18'].drop(['Well', 'DEPT'], axis=1).values, fig_axes=(fig, axes), alpha=0.5, names=variables)
 plt.tight_layout()
 plt.show()
-
-#With SB
-
-sns.set_theme(style="ticks")
-sns.pairplot(df, kind="kde")
-
-
 
 
 # %%
