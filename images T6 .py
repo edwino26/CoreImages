@@ -350,7 +350,7 @@ plt.gca().yaxis.set_visible(False)
 plt.fill_between(sub['GRAY'], 0, sub['DEPTH'], facecolor='green', alpha=0.5)
 plt.xlabel('Gray Scale RGB', fontsize=7)
 
-corte= 140
+corte= 140 # clasificador 
 PAY_Gray_scale = sub['GRAY'].apply(lambda x: 1 if x<corte else 0)
 plt.subplot(1,14,12)
 plt.plot (PAY_Gray_scale,sub['DEPTH'],'c',lw=0.5)
