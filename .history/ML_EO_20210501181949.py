@@ -274,7 +274,7 @@ plt.show()
 # %% ------------------- Boosting: Gradient Tree Boosting ---------------------
 # https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html#sklearn.ensemble.GradientBoostingRegressor
 
-rgr =  GradientBoostingRegressor(n_estimators=100, random_state=0, learning_rate=0.1, loss='ls')
+rgr =  GradientBoostingRegressor(n_estimators=100, random_state=0, learning_rate=0.01, loss='ls')
 
 
 rgr.fit(X, np.ravel(y))
@@ -295,7 +295,7 @@ axs[1].text(1.2, 0.05, 'MSE = '+str(round(mse,2)), verticalalignment='bottom', h
 axs[1].text(1.2, 0.1, 'RMSE = '+str(round(rmse,2)), verticalalignment='bottom', horizontalalignment='right', transform=ax.transAxes,color='green', fontsize=10)
 axs[1].plot(y, y, 'blue'); axs[1].set_xlabel('True '+option);
 plt.show()
-#------------------------------ End Gradient Tree Boosting -----------------------------
+#----------------------- End Gradient Tree Boosting -----------------------------
 
 
 

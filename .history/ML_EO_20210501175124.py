@@ -22,8 +22,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn import linear_model
 from sklearn.metrics import mean_squared_error
 from sklearn.svm import SVR
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.ensemble import RandomForestClassifier
 
 
 # ===============================================
@@ -243,39 +242,11 @@ plt.show()
 
 #-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o--o-o-o-o-o-o-o-o-o-o-
 #-o-o-o-o-o-o-o-o-o-o-o-o-o-  ENSEMBLE METHODS -o-o-o-o-o-o-o-o-o-o-o-o-o-o
-# Ref: https://scikit-learn.org/stable/modules/ensemble.html
 
-# %% ------------------- Averaging: Random Forest Regressor ---------------------
-# https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html
-rgr = RandomForestRegressor(n_estimators=100, criterion='mse')
+# %% ------------------- Averaging: Random Forest ---------------------
+rgr = RandomForestClassifier(n_estimators=10)
 
-
-rgr.fit(X, np.ravel(y))
-print("Relative importance of GR, RHOB, logRt,  DTCO, NPHI", rgr.feature_importances_)
-
-y_pred_train = rgr.predict(X)
-y_pred_test = rgr.predict(X_test)
-mse = mean_squared_error(y_test, y_pred_test)
-rmse = mean_squared_error(y_test, y_pred_test, squared=False)
-
-fig, axs = plt.subplots(1, 2, constrained_layout=True)
-axs[0].set_title('Train '+option)
-axs[0].plot(y, y, 'blue'); axs[0].set_xlabel('True '+option); axs[0].set_ylabel('Predicted '+option)
-axs[0].plot(y, y_pred_train, 'ko')
-axs[1].plot(y_test, y_test,  'blue')
-axs[1].plot(y_test, y_pred_test, 'go')
-axs[1].set_title('Test '+option)
-axs[1].text(1.2, 0.05, 'MSE = '+str(round(mse,2)), verticalalignment='bottom', horizontalalignment='right', transform=ax.transAxes,color='green', fontsize=10)
-axs[1].text(1.2, 0.1, 'RMSE = '+str(round(rmse,2)), verticalalignment='bottom', horizontalalignment='right', transform=ax.transAxes,color='green', fontsize=10)
-axs[1].plot(y, y, 'blue'); axs[1].set_xlabel('True '+option);
-plt.show()
-#----------------------- End Random Forest -----------------------------
-
-# %% ------------------- Boosting: Gradient Tree Boosting ---------------------
-# https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html#sklearn.ensemble.GradientBoostingRegressor
-
-rgr =  GradientBoostingRegressor(n_estimators=100, random_state=0, learning_rate=0.1, loss='ls')
-
+#rgr.fit(X, y.values.ravel())
 
 rgr.fit(X, np.ravel(y))
 
@@ -295,7 +266,8 @@ axs[1].text(1.2, 0.05, 'MSE = '+str(round(mse,2)), verticalalignment='bottom', h
 axs[1].text(1.2, 0.1, 'RMSE = '+str(round(rmse,2)), verticalalignment='bottom', horizontalalignment='right', transform=ax.transAxes,color='green', fontsize=10)
 axs[1].plot(y, y, 'blue'); axs[1].set_xlabel('True '+option);
 plt.show()
-#------------------------------ End Gradient Tree Boosting -----------------------------
+#--------------------------------- End SVR --------------------------------
+
 
 
 

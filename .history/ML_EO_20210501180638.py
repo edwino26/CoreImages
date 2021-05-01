@@ -23,7 +23,6 @@ from sklearn import linear_model
 from sklearn.metrics import mean_squared_error
 from sklearn.svm import SVR
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.ensemble import GradientBoostingRegressor
 
 
 # ===============================================
@@ -243,9 +242,8 @@ plt.show()
 
 #-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o--o-o-o-o-o-o-o-o-o-o-
 #-o-o-o-o-o-o-o-o-o-o-o-o-o-  ENSEMBLE METHODS -o-o-o-o-o-o-o-o-o-o-o-o-o-o
-# Ref: https://scikit-learn.org/stable/modules/ensemble.html
 
-# %% ------------------- Averaging: Random Forest Regressor ---------------------
+# %% ------------------- Averaging: Random Forest ---------------------
 # https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html
 rgr = RandomForestRegressor(n_estimators=100, criterion='mse')
 
@@ -271,13 +269,13 @@ axs[1].plot(y, y, 'blue'); axs[1].set_xlabel('True '+option);
 plt.show()
 #----------------------- End Random Forest -----------------------------
 
-# %% ------------------- Boosting: Gradient Tree Boosting ---------------------
-# https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html#sklearn.ensemble.GradientBoostingRegressor
-
-rgr =  GradientBoostingRegressor(n_estimators=100, random_state=0, learning_rate=0.1, loss='ls')
+# %% ------------------- Boosting: AdaBoost ---------------------
+# https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostRegressor.html#sklearn.ensemble.AdaBoostRegressor
+rgr = RandomForestRegressor(n_estimators=100, criterion='mse')
 
 
 rgr.fit(X, np.ravel(y))
+print("Relative importance of GR, RHOB, logRt,  DTCO, NPHI", rgr.feature_importances_)
 
 y_pred_train = rgr.predict(X)
 y_pred_test = rgr.predict(X_test)
@@ -295,7 +293,7 @@ axs[1].text(1.2, 0.05, 'MSE = '+str(round(mse,2)), verticalalignment='bottom', h
 axs[1].text(1.2, 0.1, 'RMSE = '+str(round(rmse,2)), verticalalignment='bottom', horizontalalignment='right', transform=ax.transAxes,color='green', fontsize=10)
 axs[1].plot(y, y, 'blue'); axs[1].set_xlabel('True '+option);
 plt.show()
-#------------------------------ End Gradient Tree Boosting -----------------------------
+#----------------------- End AdaBoost -----------------------------
 
 
 

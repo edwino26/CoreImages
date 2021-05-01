@@ -23,7 +23,7 @@ from sklearn import linear_model
 from sklearn.metrics import mean_squared_error
 from sklearn.svm import SVR
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.ensemble import AdaBoostRegressor
 
 
 # ===============================================
@@ -271,10 +271,9 @@ axs[1].plot(y, y, 'blue'); axs[1].set_xlabel('True '+option);
 plt.show()
 #----------------------- End Random Forest -----------------------------
 
-# %% ------------------- Boosting: Gradient Tree Boosting ---------------------
-# https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html#sklearn.ensemble.GradientBoostingRegressor
-
-rgr =  GradientBoostingRegressor(n_estimators=100, random_state=0, learning_rate=0.1, loss='ls')
+# %% ------------------- Boosting: AdaBoost ---------------------
+# https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostRegressor.html#sklearn.ensemble.AdaBoostRegressor
+rgr =  AdaBoostRegressor(n_estimators=2, random_state=0, learning_rate=0.001, loss='square')
 
 
 rgr.fit(X, np.ravel(y))
@@ -295,7 +294,7 @@ axs[1].text(1.2, 0.05, 'MSE = '+str(round(mse,2)), verticalalignment='bottom', h
 axs[1].text(1.2, 0.1, 'RMSE = '+str(round(rmse,2)), verticalalignment='bottom', horizontalalignment='right', transform=ax.transAxes,color='green', fontsize=10)
 axs[1].plot(y, y, 'blue'); axs[1].set_xlabel('True '+option);
 plt.show()
-#------------------------------ End Gradient Tree Boosting -----------------------------
+#----------------------- End AdaBoost -----------------------------
 
 
 

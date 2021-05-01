@@ -23,7 +23,7 @@ from sklearn import linear_model
 from sklearn.metrics import mean_squared_error
 from sklearn.svm import SVR
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.ensemble import GradientBoostingClassifier
 
 
 # ===============================================
@@ -295,7 +295,7 @@ axs[1].text(1.2, 0.05, 'MSE = '+str(round(mse,2)), verticalalignment='bottom', h
 axs[1].text(1.2, 0.1, 'RMSE = '+str(round(rmse,2)), verticalalignment='bottom', horizontalalignment='right', transform=ax.transAxes,color='green', fontsize=10)
 axs[1].plot(y, y, 'blue'); axs[1].set_xlabel('True '+option);
 plt.show()
-#------------------------------ End Gradient Tree Boosting -----------------------------
+#----------------------- End AdaBoost -----------------------------
 
 
 
