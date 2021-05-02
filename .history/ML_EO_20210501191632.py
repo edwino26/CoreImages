@@ -276,69 +276,7 @@ plt.show()
 # %% ------------------- Boosting: Gradient Tree Boosting ---------------------
 # https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html#sklearn.ensemble.GradientBoostingRegressor
 
-
-# %%  Attempt to implement Grid Search for this Estimator
-
-rgr.get_params()  #Parameters used in fitted estimator
-
-# A search consists of:
-# an estimator (regressor or classifier such as sklearn.svm.SVC());
-# a parameter space;
-# a method for searching or sampling candidates;
-# a cross-validation scheme; and
-# a score function.
-
-
-print("Available hyperparameters for this estimator: ", rgr.get_params()  )
-tuned_parameters = [
-  {'n_estimators': [1, 10, 100, 300], 'max_depth': [3, 9, 27], 'learning_rate': [0.001, 0.01, 0.1, 1]},
-  {'alpha':[0.05, 0.5, 0.9], 'n_estimators': [1, 10, 100, 300], 'max_depth': [3, 9, 27], 'learning_rate': [0.1, 1, 3]},
- ]
- 
-#Scoring:  Methods used to determine the best model depending on problem type
-#Ref: https://scikit-learn.org/stable/modules/model_evaluation.html 
-
-print("--------------------------------")
-print("Available Scorers for GridSearch: ", sorted(SCORERS.keys()))
-scores = ['neg_mean_squared_error', 'neg_mean_absolute_error']
-
-
-for score in scores:
-    print()
-    print("# Tuning hyper-parameters for %s" % score)
-    print()
-
-    gsr = GridSearchCV(
-        GradientBoostingRegressor(), tuned_parameters, scoring=score
-    )
-    gsr.fit(X, np.ravel(y))
-
-    print("Best parameters set found on development set:")
-    print()
-    print(gsr.best_params_)
-    print()
-    print("Grid scores on development set:")
-    print()
-    means = gsr.cv_results_['mean_test_score']
-    stds = gsr.cv_results_['std_test_score']
-    for mean, std, params in zip(means, stds, gsr.cv_results_['params']):
-        print("%0.3f (+/-%0.03f) for %r"
-              % (mean, std * 2, params))
-    print()
-
-    print("Detailed classification report:")
-    print()
-    print("Done: the model is trained on the full development set.")
-    print("Done: the scores are computed on the full evaluation set.")
-    print()
-    y_true, y_pred = y_test, rgr.predict(X_test)
-    #print(classification_report(y_true, y_pred))
-  
-# %%  Implementation of best model from GridSearch
-lr = gsr.best_params_['learning_rate']
-md = gsr.best_params_['max_depth']
-ne = gsr.best_params_['n_estimators']
-rgr =  GradientBoostingRegressor(n_estimators=ne, random_state=0, learning_rate=lr, max_depth=md,loss='ls', alpha=0.5)
+rgr =  GradientBoostingRegressor(n_estimators=100, random_state=0, learning_rate=0.1, loss='ls')
 
 
 rgr.fit(X, np.ravel(y))
@@ -360,6 +298,59 @@ axs[1].text(1.2, 0.1, 'RMSE = '+str(round(rmse,2)), verticalalignment='bottom', 
 axs[1].plot(y, y, 'blue'); axs[1].set_xlabel('True '+option);
 plt.show()
 #------------------------------ End Gradient Tree Boosting -----------------------------
+
+# %%  Attempt to implement Grid Search for this Estimator
+
+rgr.get_params()  #Parameters used in fitted estimator
+
+# A search consists of:
+# an estimator (regressor or classifier such as sklearn.svm.SVC());
+# a parameter space;
+# a method for searching or sampling candidates;
+# a cross-validation scheme; and
+# a score function.
+
+tuned_parameters = [
+  {'n_estimators': [1, 10, 100, 300], 'max_depth': [3, 9, 27], 'learning_rate': [0.001, 0.01, 0.1, 1]},
+  {'n_estimators': [1, 10, 100, 300], 'max_depth': [3, 9, 27], 'learning_rate': [0.001, 0.01, 0.1, 1]},
+ ]
+ 
+#Scoring:  Methods used to determine the best model depending on problem type
+#Ref: https://scikit-learn.org/stable/modules/model_evaluation.html 
+print("Available Scorers for GridSearch: ", sorted(SCORERS.keys()))
+scores = ['neg_mean_squared_error', 'neg_mean_absolute_error']
+
+
+for score in scores:
+    print("# Tuning hyper-parameters for %s" % score)
+    print()
+
+    rgr = GridSearchCV(
+        GradientBoostingRegressor(), tuned_parameters, scoring=score
+    )
+    rgr.fit(X, np.ravel(y))
+
+    print("Best parameters set found on development set:")
+    print()
+    print(rgr.best_params_)
+    print()
+    print("Grid scores on development set:")
+    print()
+    means = rgr.cv_results_['mean_test_score']
+    stds = rgr.cv_results_['std_test_score']
+    for mean, std, params in zip(means, stds, rgr.cv_results_['params']):
+        print("%0.3f (+/-%0.03f) for %r"
+              % (mean, std * 2, params))
+    print()
+
+    print("Detailed classification report:")
+    print()
+    print("The model is trained on the full development set.")
+    print("The scores are computed on the full evaluation set.")
+    print()
+    y_true, y_pred = y_test, rgr.predict(X_test)
+    #print(classification_report(y_true, y_pred))
+  
 
 
 

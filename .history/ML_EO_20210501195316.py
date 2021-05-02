@@ -338,7 +338,10 @@ for score in scores:
 lr = gsr.best_params_['learning_rate']
 md = gsr.best_params_['max_depth']
 ne = gsr.best_params_['n_estimators']
-rgr =  GradientBoostingRegressor(n_estimators=ne, random_state=0, learning_rate=lr, max_depth=md,loss='ls', alpha=0.5)
+
+
+
+rgr =  GradientBoostingRegressor(n_estimators=100, random_state=0, learning_rate=lr, max_depth=md,loss='ls', alpha=0.5)
 
 
 rgr.fit(X, np.ravel(y))

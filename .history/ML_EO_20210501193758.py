@@ -298,7 +298,7 @@ tuned_parameters = [
 #Scoring:  Methods used to determine the best model depending on problem type
 #Ref: https://scikit-learn.org/stable/modules/model_evaluation.html 
 
-print("--------------------------------")
+
 print("Available Scorers for GridSearch: ", sorted(SCORERS.keys()))
 scores = ['neg_mean_squared_error', 'neg_mean_absolute_error']
 
@@ -335,10 +335,7 @@ for score in scores:
     #print(classification_report(y_true, y_pred))
   
 # %%  Implementation of best model from GridSearch
-lr = gsr.best_params_['learning_rate']
-md = gsr.best_params_['max_depth']
-ne = gsr.best_params_['n_estimators']
-rgr =  GradientBoostingRegressor(n_estimators=ne, random_state=0, learning_rate=lr, max_depth=md,loss='ls', alpha=0.5)
+rgr =  GradientBoostingRegressor(n_estimators=100, random_state=0, learning_rate=0.1, max_depth=9,loss='ls', alpha=0.5)
 
 
 rgr.fit(X, np.ravel(y))
