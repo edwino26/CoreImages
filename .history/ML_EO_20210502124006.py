@@ -1,6 +1,5 @@
 # # lectura de los xlsx del procesamiento de imagenes 
 # y la informacion obtenida de los registros por pozo
-
 # %%
 import numpy as np
 import pandas as pd
@@ -31,9 +30,9 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import SCORERS
 
 # ===============================================
-from ML_EO_GridSearch import *
+import ML_EO_GridSearch
 
-GRIDSEARCH = 'on' #GridSearch Option
+GS = 'on' #GridSearch Option
 
     
 
@@ -103,16 +102,16 @@ for (i, d),hatch in zip(df.groupby('Well'), hatches):
 ax.legend()
 
 # Expected correlations between variables
-fig, axss = plt.subplots(2, 2, figsize=(5, 5))
-axss[0, 0].hist(df['GRAY'])
-axss[1, 0].plot(df['GR'], df['GRAY'], linestyle='None', markersize=4, marker='o')
-axss[0, 1].plot(df['RHOB'], df['GRAY'], linestyle='None', markersize=4, marker='o')
-axss[1, 1].hist2d(df['logRT'], df['GRAY'])
+fig, axs = plt.subplots(2, 2, figsize=(5, 5))
+axs[0, 0].hist(df['GRAY'])
+axs[1, 0].plot(df['GR'], df['GRAY'], linestyle='None', markersize=4, marker='o')
+axs[0, 1].plot(df['RHOB'], df['GRAY'], linestyle='None', markersize=4, marker='o')
+axs[1, 1].hist2d(df['logRT'], df['GRAY'])
 plt.show()
 
 # Matrix Plot
 variables= ['GR', 'RHOB', 'logRT', 'DTCO', 'NPHI', 'GRAY']
-fig, axes = scatterplotmatrix(df[df['Well']=='T2'].drop(['Well', 'DEPT'], axis=1).values, figsize=(8, 6), alpha=0.5)
+fig, axes = scatterplotmatrix(df[df['Well']=='T2'].drop(['Well', 'DEPT'], axis=1).values, figsize=(10, 8), alpha=0.5)
 fig, axes = scatterplotmatrix(df[df['Well']=='T6'].drop(['Well', 'DEPT'], axis=1).values, fig_axes=(fig, axes), alpha=0.5, names=variables) 
 #fig, axes = scatterplotmatrix(df[df['Well']=='U18'].drop(['Well', 'DEPT'], axis=1).values, fig_axes=(fig, axes), alpha=0.5, names=variables)
 plt.tight_layout()
@@ -126,10 +125,11 @@ sns.pairplot(df, kind="kde")
 # %% =========================  Machine Learning: PROCESSING ===============================
 print(df.shape)
 df['Pay'] = df['GRAY'].apply(lambda x: 1 if x> 170 else 0)
+# %%
 
 data = df.drop(['Well', 'DEPT'], axis=1).copy()
 data.head(100)
-
+# %%
 train, test = train_test_split(data, test_size=0.2)
 scaler = StandardScaler()
 test.shape
@@ -310,12 +310,10 @@ plt.show()
 
 # %% ------------------- Boosting: Gradient Tree Boosting ---------------------
 # https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html#sklearn.ensemble.GradientBoostingRegressor
-if GRIDSEARCH == 'on':
-    rgr = GradientBoostingRegressorGS(X, np.ravel(y))
-    rgr.fit(X, np.ravel(y))
-else:
-    rgr = GradientBoostingRegressor(n_estimators=100, random_state=0, learning_rate=0.1, max_depth=5,loss='ls', alpha=0.9)
-    rgr.fit(X, np.ravel(y))
+
+rgr =  GradientBoostingRegressor(n_estimators=100, random_state=0, learning_rate=0.1, max_depth=5,loss='ls', alpha=0.9)
+
+rgr.fit(X, np.ravel(y))
 
 y_pred_train = rgr.predict(X)
 y_pred_test = rgr.predict(X_test)
@@ -342,14 +340,9 @@ plt.show()
 # hidden_layer_sizes (30, 30, 30) means 3 hidden layers with 30 neurons each. 
 # Use e.g. [x for x in itertools.product((10,50,100,30),repeat=4)] to generate all possible 4-hidden layer combinations
 
-if GRIDSEARCH == 'on':
-    rgr = MLPRegressorGS(X, np.ravel(y))
-    rgr.fit(X, np.ravel(y))
-else:
-    rgr = MLPRegressor(hidden_layer_sizes=(30, 100, 30, 100), alpha=0.0001, batch_size='auto', learning_rate_init=0.001)
-    rgr.fit(X, np.ravel(y))
+rgr =  MLPRegressor(hidden_layer_sizes=(30, 100, 30, 100), alpha=0.0001, batch_size='auto', learning_rate_init=0.001)
 
-
+rgr.fit(X, np.ravel(y))
 
 y_pred_train = rgr.predict(X)
 y_pred_test = rgr.predict(X_test)

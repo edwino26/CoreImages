@@ -1,6 +1,5 @@
 # # lectura de los xlsx del procesamiento de imagenes 
 # y la informacion obtenida de los registros por pozo
-
 # %%
 import numpy as np
 import pandas as pd
@@ -31,9 +30,9 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import SCORERS
 
 # ===============================================
-from ML_EO_GridSearch import *
+import ML_EO_GridSearch
 
-GRIDSEARCH = 'on' #GridSearch Option
+GS = 'on' #GridSearch Option
 
     
 
@@ -103,11 +102,11 @@ for (i, d),hatch in zip(df.groupby('Well'), hatches):
 ax.legend()
 
 # Expected correlations between variables
-fig, axss = plt.subplots(2, 2, figsize=(5, 5))
-axss[0, 0].hist(df['GRAY'])
-axss[1, 0].plot(df['GR'], df['GRAY'], linestyle='None', markersize=4, marker='o')
-axss[0, 1].plot(df['RHOB'], df['GRAY'], linestyle='None', markersize=4, marker='o')
-axss[1, 1].hist2d(df['logRT'], df['GRAY'])
+fig, axs = plt.subplots(2, 2, figsize=(5, 5))
+axs[0, 0].hist(df['GRAY'])
+axs[1, 0].plot(df['GR'], df['GRAY'], linestyle='None', markersize=4, marker='o')
+axs[0, 1].plot(df['RHOB'], df['GRAY'], linestyle='None', markersize=4, marker='o')
+axs[1, 1].hist2d(df['logRT'], df['GRAY'])
 plt.show()
 
 # Matrix Plot
@@ -126,10 +125,11 @@ sns.pairplot(df, kind="kde")
 # %% =========================  Machine Learning: PROCESSING ===============================
 print(df.shape)
 df['Pay'] = df['GRAY'].apply(lambda x: 1 if x> 170 else 0)
+# %%
 
 data = df.drop(['Well', 'DEPT'], axis=1).copy()
 data.head(100)
-
+# %%
 train, test = train_test_split(data, test_size=0.2)
 scaler = StandardScaler()
 test.shape

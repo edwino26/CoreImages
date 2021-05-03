@@ -1,6 +1,5 @@
 # # lectura de los xlsx del procesamiento de imagenes 
 # y la informacion obtenida de los registros por pozo
-
 # %%
 import numpy as np
 import pandas as pd
@@ -12,7 +11,6 @@ import glob
 import seaborn as sns
 import missingno as msno
 import math
-import itertools
 
 #Clustering packages
 from sklearn.cluster import MiniBatchKMeans
@@ -31,11 +29,6 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import SCORERS
 
 # ===============================================
-from ML_EO_GridSearch import *
-
-GRIDSEARCH = 'on' #GridSearch Option
-
-    
 
 #%% ====================== Main Dataframe Computation =====================
 
@@ -103,16 +96,16 @@ for (i, d),hatch in zip(df.groupby('Well'), hatches):
 ax.legend()
 
 # Expected correlations between variables
-fig, axss = plt.subplots(2, 2, figsize=(5, 5))
-axss[0, 0].hist(df['GRAY'])
-axss[1, 0].plot(df['GR'], df['GRAY'], linestyle='None', markersize=4, marker='o')
-axss[0, 1].plot(df['RHOB'], df['GRAY'], linestyle='None', markersize=4, marker='o')
-axss[1, 1].hist2d(df['logRT'], df['GRAY'])
+fig, axs = plt.subplots(2, 2, figsize=(5, 5))
+axs[0, 0].hist(df['GRAY'])
+axs[1, 0].plot(df['GR'], df['GRAY'], linestyle='None', markersize=4, marker='o')
+axs[0, 1].plot(df['RHOB'], df['GRAY'], linestyle='None', markersize=4, marker='o')
+axs[1, 1].hist2d(df['logRT'], df['GRAY'])
 plt.show()
 
 # Matrix Plot
 variables= ['GR', 'RHOB', 'logRT', 'DTCO', 'NPHI', 'GRAY']
-fig, axes = scatterplotmatrix(df[df['Well']=='T2'].drop(['Well', 'DEPT'], axis=1).values, figsize=(8, 6), alpha=0.5)
+fig, axes = scatterplotmatrix(df[df['Well']=='T2'].drop(['Well', 'DEPT'], axis=1).values, figsize=(10, 8), alpha=0.5)
 fig, axes = scatterplotmatrix(df[df['Well']=='T6'].drop(['Well', 'DEPT'], axis=1).values, fig_axes=(fig, axes), alpha=0.5, names=variables) 
 #fig, axes = scatterplotmatrix(df[df['Well']=='U18'].drop(['Well', 'DEPT'], axis=1).values, fig_axes=(fig, axes), alpha=0.5, names=variables)
 plt.tight_layout()
@@ -126,10 +119,11 @@ sns.pairplot(df, kind="kde")
 # %% =========================  Machine Learning: PROCESSING ===============================
 print(df.shape)
 df['Pay'] = df['GRAY'].apply(lambda x: 1 if x> 170 else 0)
+# %%
 
 data = df.drop(['Well', 'DEPT'], axis=1).copy()
 data.head(100)
-
+# %%
 train, test = train_test_split(data, test_size=0.2)
 scaler = StandardScaler()
 test.shape
@@ -159,17 +153,9 @@ X_test = scaler.transform(X_test)
 #  ================  Machine Learning: MODELING =======================
 #  ====================================================================
 print(df.shape)
-
 # %% -------------- Linear Model: LASSO, L1 regularization --------------
-
-
-if GRIDSEARCH == 'on':
-    rgr = lassoGS(X, y)
-    rgr.fit(X, y)
-else:
-    rgr = linear_model.Lasso(alpha=0.3)
-    rgr.fit(X, y)
-
+rgr = linear_model.Lasso(alpha=0.3)
+rgr.fit(X, y)
 
 y_pred_train = rgr.predict(X)
 y_pred_test = rgr.predict(X_test)
@@ -189,14 +175,9 @@ axs[1].text(1.2, 0.1, 'RMSE = '+str(round(rmse,2)), verticalalignment='bottom', 
 axs[1].plot(y, y, 'blue'); axs[1].set_xlabel('True '+option);
 plt.show()
 #-------------------------------- End Lasso --------------------------
-# %%
 # %% -------------- Linear Model: ElasticNet, L1+L2 regularization --------------
-if GRIDSEARCH == 'on':
-    rgr = ElasticNetGS(X, y)
-    rgr.fit(X, y)
-else:
-    rgr = linear_model.ElasticNet(alpha=0.5, l1_ratio=0.1, random_state = 5, selection='random')
-    rgr.fit(X, y)
+rgr= linear_model.ElasticNet(alpha=0.5, l1_ratio=0.1, random_state = 5, selection='random')
+rgr.fit(X, y)
 
 y_pred_train = rgr.predict(X)
 y_pred_test = rgr.predict(X_test)
@@ -218,12 +199,8 @@ plt.show()
 #-------------------------------- End ElasticNet --------------------------
 #--------------------------------------------------------------------------
 # %% ------------------- Linear Model: Ridge Regression -------------------
-if GRIDSEARCH == 'on':
-    rgr = RidgeGS(X, y)
-    rgr.fit(X, y)
-else:
-    rgr = linear_model.Ridge(alpha=0.5, solver='auto')
-    rgr.fit(X, y)
+rgr= linear_model.Ridge(alpha=0.5, solver='auto')
+rgr.fit(X, y)
 
 y_pred_train = rgr.predict(X)
 y_pred_test = rgr.predict(X_test)
@@ -245,14 +222,8 @@ plt.show()
 #--------------------------------- End Ridge ------------------------------
 #--------------------------------------------------------------------------
 # %% ------------------- Support Vector Machines: SVR ---------------------
-# https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html
-
-if GRIDSEARCH == 'on':
-    rgr = SVRGS(X, np.ravel(y))
-    rgr.fit(X, np.ravel(y))
-else:
-    rgr = SVR(C= 150, epsilon=0.2)
-    rgr.fit(X, np.ravel(y))
+rgr= SVR(C= 150, epsilon=0.2)
+rgr.fit(X, y)
 
 y_pred_train = rgr.predict(X)
 y_pred_test = rgr.predict(X_test)
@@ -278,16 +249,10 @@ plt.show()
 
 # %% ------------------- Averaging: Random Forest Regressor ---------------------
 # https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html
+rgr = RandomForestRegressor(n_estimators=100, criterion='mse')
 
 
-if GRIDSEARCH == 'on':
-    rgr = RandomForestRegressorGS(X, np.ravel(y))
-    rgr.fit(X, np.ravel(y))
-else:
-    rgr = RandomForestRegressor(n_estimators=100, criterion='mse')
-    rgr.fit(X, np.ravel(y))
-
-
+rgr.fit(X, np.ravel(y))
 print("Relative importance of GR, RHOB, logRt,  DTCO, NPHI", rgr.feature_importances_)
 
 y_pred_train = rgr.predict(X)
@@ -310,12 +275,10 @@ plt.show()
 
 # %% ------------------- Boosting: Gradient Tree Boosting ---------------------
 # https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html#sklearn.ensemble.GradientBoostingRegressor
-if GRIDSEARCH == 'on':
-    rgr = GradientBoostingRegressorGS(X, np.ravel(y))
-    rgr.fit(X, np.ravel(y))
-else:
-    rgr = GradientBoostingRegressor(n_estimators=100, random_state=0, learning_rate=0.1, max_depth=5,loss='ls', alpha=0.9)
-    rgr.fit(X, np.ravel(y))
+
+rgr =  GradientBoostingRegressor(n_estimators=100, random_state=0, learning_rate=0.1, max_depth=5,loss='ls', alpha=0.9)
+
+rgr.fit(X, np.ravel(y))
 
 y_pred_train = rgr.predict(X)
 y_pred_test = rgr.predict(X_test)
@@ -335,37 +298,30 @@ axs[1].plot(y, y, 'blue'); axs[1].set_xlabel('True '+option);
 plt.show()
 #----------------------- End Gradient Boosting -----------------------------
 
-# %% ----------------------------------------------- Neural Network ----------------------------------------------------
+# %% -------------------------- Neural Network ---------------------------
 # https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html#sklearn.neural_network.MLPRegressor
-# Default: solver: Adam, activation: relu, learning rate: constant given by learning_rate_init, batch_size='auto'
-# hidden_layer_sizes: tuple, length = n_layers - 2, default=(100,),which means one hidden layer with 100 neurons
-# hidden_layer_sizes (30, 30, 30) means 3 hidden layers with 30 neurons each. 
-# Use e.g. [x for x in itertools.product((10,50,100,30),repeat=4)] to generate all possible 4-hidden layer combinations
+# Default: solver: Adam, activation: relu, learning rate: constant given by learning_rate_init
+# Hidden_layer_sizes: tuple, length = n_layers - 2, default=(100,),which means one hidden layer with 100 neurons
 
-if GRIDSEARCH == 'on':
-    rgr = MLPRegressorGS(X, np.ravel(y))
-    rgr.fit(X, np.ravel(y))
-else:
-    rgr = MLPRegressor(hidden_layer_sizes=(30, 100, 30, 100), alpha=0.0001, batch_size='auto', learning_rate_init=0.001)
-    rgr.fit(X, np.ravel(y))
+(6,) means one hidden layer with 6 neurons
+rgr =  MLPRegressor(hidden_layer_sizes=100, alpha=0.0001, batch_size='auto', learning_rate_init=0.001)
 
-
+rgr.fit(X, np.ravel(y))
 
 y_pred_train = rgr.predict(X)
 y_pred_test = rgr.predict(X_test)
 mse = mean_squared_error(y_test, y_pred_test)
-rmse_train = mean_squared_error(y, y_pred_train, squared=False)
 rmse = mean_squared_error(y_test, y_pred_test, squared=False)
 
 fig, axs = plt.subplots(1, 2, constrained_layout=True)
 axs[0].set_title('Train '+option)
 axs[0].plot(y, y, 'blue'); axs[0].set_xlabel('True '+option); axs[0].set_ylabel('Predicted '+option)
 axs[0].plot(y, y_pred_train, 'ko')
-axs[0].text(-0.3, 0.08, 'RMSE = '+str(round(rmse_train,2)), verticalalignment='bottom', horizontalalignment='right', transform=ax.transAxes,color='black', fontsize=10)
 axs[1].plot(y_test, y_test,  'blue')
 axs[1].plot(y_test, y_pred_test, 'go')
 axs[1].set_title('Test '+option)
-axs[1].text(1.2, 0.08, 'RMSE = '+str(round(rmse,2)), verticalalignment='bottom', horizontalalignment='right', transform=ax.transAxes,color='green', fontsize=10)
+axs[1].text(1.2, 0.05, 'MSE = '+str(round(mse,2)), verticalalignment='bottom', horizontalalignment='right', transform=ax.transAxes,color='green', fontsize=10)
+axs[1].text(1.2, 0.1, 'RMSE = '+str(round(rmse,2)), verticalalignment='bottom', horizontalalignment='right', transform=ax.transAxes,color='green', fontsize=10)
 axs[1].plot(y, y, 'blue'); axs[1].set_xlabel('True '+option);
 plt.show()
 #----------------------- End Gradient Boosting -----------------------------
